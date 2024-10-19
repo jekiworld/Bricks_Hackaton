@@ -1,0 +1,153 @@
+@font-face {
+    font-family: kamerik-3d;
+    src: url(../fonts/kamerik205-heavy.woff2);
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: merriweather-italic-3d;
+    src: url(../fonts/merriweather-regular-italic.woff2);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    background-color: rgb(15, 15, 16);
+    color: #fff;
+    font-family: kamerik-3d;
+}
+
+.sidebar {
+    width: 40px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.sidebar-icon {
+    font-size: 24px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.sidebar-icon_down {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.sidebar-icon:hover {
+    color: #00ffae;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.text-input {
+    width: 400px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #444;
+    background-color: rgb(20,20,21);
+    color: #fff;
+    border-radius: 5px;
+    outline: none;
+}
+
+.text-input::placeholder {
+    color: #888;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #00ffae;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button:hover {
+    background-color: #00dcae;
+}
+
+.clip-icon {
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.file-input {
+    display: none;
+}
+
+.photo-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #00ffae;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.photo-button:hover {
+    background-color: #00dcae;
+}
+
+.suggestions {
+    display: flex;
+    gap: 10px;
+}
+
+.suggestion {
+    padding: 3px 10px;
+    background-color: black;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #444;
+}
+
+
+.suggestion:hover {
+    background-color: #00ffae;
+}
+
+.image-preview {
+    margin-top: 20px;
+}
+
+.uploaded-image {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
