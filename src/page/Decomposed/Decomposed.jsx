@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Decomposed.css";
 import { ReactComponent as Right } from './icons/arrow-right.svg';
 import { ReactComponent as Left } from './icons/arrow-left.svg';
+import { useNavigate } from "react-router-dom";
 
-const Decomposed = () => {
+const Decomposed = ({items, handleObjectUrl}) => {
     const nextButtonRef = useRef(null);
     const prevButtonRef = useRef(null);
     const carouselRef = useRef(null);
@@ -11,68 +12,37 @@ const Decomposed = () => {
     const backButtonRef = useRef(null);
     const [unAcceppClick, setUnAcceppClick] = useState(null);
 
+    const navigate = useNavigate();  // Add this
 
-    const items = [
-        {
-            imgSrc: "images/img1.png",
-            title: "Motherboard",
-            topic: "Motherboard1",
-            des: "We use a motherboard to connect and allow communication between all the components of a computer, including the CPU, RAM, storage, and peripheral devices. It acts as the central hub that enables power distribution and data exchange across these parts.",
-        },
-        {
-            imgSrc: "images/motherboard.png",
-            title: "Motherboard",
-            topic: "Motherboard",
-            des: "A motherboard is the main circuit board in a computer that connects and allows communication between all the essential components, such as the CPU, RAM, storage devices, and other peripherals. It serves as the backbone of the system, providing slots and ports for expansion and functionality.",
-            
-        },
-        {
-            imgSrc: "images/img1.png",
-            title: "Graphics Card",
-            topic: "GPU",
-            des: "A graphics card is a hardware component responsible for rendering images, videos, and animations on the computer’s display. It is crucial for gaming, video editing, and 3D rendering.",
-           
-        },
-        {
-            imgSrc: "images/oper.png",
-            title: "RAM",
-            topic: "RAM",
-            des: "RAM (Random Access Memory) is a type of computer memory that can be accessed randomly and is used to store data temporarily while a computer is running.",
-            
-        },
-        {
-            imgSrc: "images/img5.png",
-            title: "Motherboard",
-            topic: "Motherboard5",
-            des: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, laborum cumque dignissimos quidem atque et eligendi aperiam voluptates beatae maxime.",
-           
-        },
-        {
-            imgSrc: "images/img6.png",
-            title: "Motherboard",
-            topic: "Motherboard",
-            des: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, laborum cumque dignissimos quidem atque et eligendi aperiam voluptates beatae maxime.",
-            
-        }
-    ];
+    
 
     const showSlider = (type) => {
-        if (!nextButtonRef.current || !prevButtonRef.current) return;
-
+        // Ensure refs are available before proceeding
+        if (!nextButtonRef.current || !prevButtonRef.current || !carouselRef.current || !listHTMLRef.current) return;
+    
+        // Disable button clicks temporarily
         nextButtonRef.current.style.pointerEvents = "none";
         prevButtonRef.current.style.pointerEvents = "none";
-
+    
+        // Remove any existing animation classes
         carouselRef.current.classList.remove("next", "prev");
+    
+        // Get the items in the list and ensure it has children
         const items = listHTMLRef.current.children;
-
+        if (!items || items.length === 0) return;  // Add this check to avoid manipulating an empty list
+    
+        // Perform the sliding logic
         if (type === "next") {
+            // Append the first item to the end of the list
             listHTMLRef.current.appendChild(items[0]);
             carouselRef.current.classList.add("next");
         } else {
+            // Prepend the last item to the start of the list
             listHTMLRef.current.prepend(items[items.length - 1]);
             carouselRef.current.classList.add("prev");
         }
-
+    
+        // Re-enable button clicks after 2 seconds
         clearTimeout(unAcceppClick);
         setUnAcceppClick(
             setTimeout(() => {
@@ -83,36 +53,50 @@ const Decomposed = () => {
     };
 
     useEffect(() => {
-        const handleNextClick = () => showSlider("next");
-        const handlePrevClick = () => showSlider("prev");
-        const handleSeeMoreClick = () => {
-            carouselRef.current.classList.remove("next", "prev");
-            carouselRef.current.classList.add("showDetail");
-        };
-        const handleBackClick = () => {
-            carouselRef.current.classList.remove("showDetail");
-        };
-
-        nextButtonRef.current.addEventListener("click", handleNextClick);
-        prevButtonRef.current.addEventListener("click", handlePrevClick);
-
-        const seeMoreButtons = document.querySelectorAll(".seeMore");
-        seeMoreButtons.forEach((button) =>
-            button.addEventListener("click", handleSeeMoreClick)
-        );
-
-        backButtonRef.current.addEventListener("click", handleBackClick);
-
-        return () => {
-            nextButtonRef.current.removeEventListener("click", handleNextClick);
-            prevButtonRef.current.removeEventListener("click", handlePrevClick);
+        // Ensure refs are available before attaching event listeners
+        if (nextButtonRef.current && prevButtonRef.current && backButtonRef.current) {
+            const handleNextClick = () => showSlider("next");
+            const handlePrevClick = () => showSlider("prev");
+            const handleSeeMoreClick = () => {
+                carouselRef.current.classList.remove("next", "prev");
+                carouselRef.current.classList.add("showDetail");
+            };
+            const handleBackClick = () => {
+                carouselRef.current.classList.remove("showDetail");
+            };
+    
+            nextButtonRef.current.addEventListener("click", handleNextClick);
+            prevButtonRef.current.addEventListener("click", handlePrevClick);
+    
+            const seeMoreButtons = document.querySelectorAll(".seeMore");
             seeMoreButtons.forEach((button) =>
-                button.removeEventListener("click", handleSeeMoreClick)
+                button.addEventListener("click", handleSeeMoreClick)
             );
-            backButtonRef.current.removeEventListener("click", handleBackClick);
-        };
+    
+            backButtonRef.current.addEventListener("click", handleBackClick);
+    
+            return () => {
+                // Ensure refs still exist before removing listeners
+                if (nextButtonRef.current) {
+                    nextButtonRef.current.removeEventListener("click", handleNextClick);
+                }
+                if (prevButtonRef.current) {
+                    prevButtonRef.current.removeEventListener("click", handlePrevClick);
+                }
+                seeMoreButtons.forEach((button) =>
+                    button.removeEventListener("click", handleSeeMoreClick)
+                );
+                if (backButtonRef.current) {
+                    backButtonRef.current.removeEventListener("click", handleBackClick);
+                }
+            };
+        }
     }, [unAcceppClick]);
 
+    const handleOpen3DModal = (object) => {
+        handleObjectUrl(object);
+        navigate("/3d");  // Navigate to /3d after handling object URL
+    };
 
     return (
         <div className="Decomposed">
@@ -127,7 +111,7 @@ const Decomposed = () => {
                 <div className="list" ref={listHTMLRef}>
                     {items.map((item, index) => (
                         <div className="item" key={index}>
-                            <img src={item.imgSrc} alt={item.title} />
+                            <img src={`http://192.168.0.127:8000${item.imgSrc}`} alt={item.title} />
                             <div className="introduce">
                                 <div className="title">DESIGN SLIDER</div>
                                 <div className="topic">{item.topic}</div>
@@ -138,7 +122,7 @@ const Decomposed = () => {
                                 <div className="title">{item.title}</div>
                                 <div className="des">{item.des}</div>
                                 <div className="checkout" style={{ marginTop: "15px" }}>
-                                    <button>OPEN 3D modal</button>
+                                    <button onClick={() => handleOpen3DModal(item.object)}>OPEN 3D modal</button>
                                     <button className="open-chat-button">OPEN CHAT WITH {item.title}</button>
                                 </div>
                             </div>
