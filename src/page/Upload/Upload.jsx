@@ -10,13 +10,12 @@ import { ReactComponent as Logout } from './icons/log-out.svg';
 import { ReactComponent as ClipIcon } from './icons/paperclip.svg';  // Добавляем иконку скрепки
 import { useNavigate } from 'react-router-dom';
 
-function Upload() {
+function Upload({ onUploadSuccess }) { // Добавил onUploadSuccess как пропс
     const navigate = useNavigate();
-    const handleButtonClick = () => {
-        navigate('/decomposed');
-      };
     const [text, setText] = useState('');
+    const [imageFile, setImageFile] = useState(null); // Хранение файла
     const [imageSrc, setImageSrc] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); // Добавлено состояние загрузки
 
     const handleTextChange = (e) => {
         setText(e.target.value);
@@ -30,16 +29,42 @@ function Upload() {
                 setImageSrc(event.target.result);
             };
             reader.readAsDataURL(file);
+            setImageFile(file); // Сохранение файла для отправки на бэк
         }
     };
 
-    const handlePhotoClick = () => {
-        alert("Открыть камеру для съёмки фото");
-    };
+    const handleSubmit = async () => {
+        if (!text || !imageFile) {
+            alert("Введите текст и загрузите изображение!");
+            return;
+        }
 
-    const handleSubmit = () => {
-        alert(`Text submitted: ${text}`);
-        setText('');  
+        setIsLoading(true); // Начало загрузки
+
+        const formData = new FormData();
+        formData.append('text', text);
+        formData.append('image', imageFile);
+
+        try {
+            const response = await fetch('http://localhost:5000/upload', { // Пример URL бэка
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                onUploadSuccess(result); // Вызов onUploadSuccess для добавления данных в Decomposed
+                setText(''); // Сброс полей
+                setImageSrc(null);
+                setImageFile(null);
+            } else {
+                alert('Ошибка загрузки данных');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+        } finally {
+            setIsLoading(false); // Конец загрузки
+        }
     };
 
     return (
@@ -78,9 +103,10 @@ function Upload() {
                         onChange={handleTextChange}
                         className="text-input"
                     />
-                    <button className="submit-button" onClick={handleSubmit} >→</button>
+                    <button className="submit-button" onClick={handleSubmit} disabled={isLoading}>
+                        {isLoading ? "Uploading..." : "→"}
+                    </button>
                 </div>
-
 
                 <div className="suggestions">
                     <button className="suggestion">Brick my laptop</button>

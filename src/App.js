@@ -4,6 +4,7 @@ import './App.css';
 import Home from './page/Home/Home'
 import Upload from './page/Upload/Upload';
 import Decomposed from './page/Decomposed/Decomposed';
+import Three from './page/Three/Three';
 
 function App() {
 
@@ -19,6 +20,10 @@ function App() {
     {
       path: "/decomposed",
       element: <Decomposed/>
+    },
+    {
+      path: "/3d",
+      element: <Three/>
     }
   ])
 
