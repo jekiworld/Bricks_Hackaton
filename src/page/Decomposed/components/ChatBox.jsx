@@ -8,13 +8,10 @@ const ChatBox = ({ partName, onSendMessage }) => {
     const handleSendMessage = async () => {
         if (message.trim() === "") return;
 
-        // Добавляем сообщение пользователя в историю
         setChatHistory(prev => [...prev, { sender: "You", text: message }]);
 
-        // Отправляем запрос к GPT API
         const response = await onSendMessage(message);
         
-        // Добавляем ответ от GPT в историю
         setChatHistory(prev => [...prev, { sender: partName, text: response }]);
 
         setMessage("");
@@ -46,3 +43,4 @@ const ChatBox = ({ partName, onSendMessage }) => {
 };
 
 export default ChatBox;
+ 

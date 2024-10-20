@@ -16,8 +16,8 @@ function Upload({onUploadComplete}) {
     const [imageFile, setImageFile] = useState(null); 
     const [imageSrc, setImageSrc] = useState(null);
     const [isLoading, setIsLoading] = useState(false); 
-    const [status, setStatus] = useState(null); // Для статуса
-    const [imageId, setImageId] = useState(null); // Для хранения image_id
+    const [status, setStatus] = useState(null); 
+    const [imageId, setImageId] = useState(null); 
 
 
     const handleTextChange = (e) => {
@@ -65,23 +65,23 @@ function Upload({onUploadComplete}) {
                     } else {
                        
                         console.log('12');
-                        clearInterval(interval); // Останавливаем интервал
+                        clearInterval(interval); 
                         onUploadComplete(result.data);
                         navigate('/decomposed');
                     }
                 }).catch((error) => {
                     console.error('Ошибка при проверке статуса:', error);
-                    clearInterval(interval); // Останавливаем интервал в случае ошибки
+                    clearInterval(interval); 
                 });
-            }, 5000); // Проверка каждые 5 секунд
+            }, 5000); 
         }
     
         return () => {
             if (interval) {
-                clearInterval(interval); // Очищаем интервал при размонтировании компонента
+                clearInterval(interval);
             }
         };
-    }, [imageId, navigate]); // Запускается при изменении imageId
+    }, [imageId, navigate]); 
 
     const handleSubmit = async () => {
         if (!imageFile && !text) {
@@ -93,10 +93,10 @@ function Upload({onUploadComplete}) {
 
         const formData = new FormData();
         if (imageFile) {
-            formData.append('upload_image', imageFile); // Добавляем изображение, если оно есть
+            formData.append('upload_image', imageFile); 
         }
         if (text) {
-            formData.append('text', text); // Добавляем текст, если он введен
+            formData.append('text', text); 
         }
 
         try {
@@ -109,17 +109,16 @@ function Upload({onUploadComplete}) {
             const result = await response.json();
             if (response.ok) {
                 console.log("Полный объект ответа: ", result); 
-                // Извлекаем image_id из объекта
-                const imageId = result.image_id;  // Извлекаем image_id из объекта
-                console.log("Получен image_id: ", imageId); // Выводим правильный image_id
+                const imageId = result.image_id;  
+                console.log("Получен image_id: ", imageId); 
                 setText(''); 
                 setImageSrc(null);
                 setImageFile(null);
 
-                // Сохраняем image_id и запускаем проверку статуса
+                
                 if (imageId) {
-                    setImageId(imageId); // Сохраняем image_id для интервала
-                    checkStatus(imageId); // Передаем правильный image_id в функцию для проверки статуса
+                    setImageId(imageId); 
+                    checkStatus(imageId); 
                 } else {
                     console.error('Ошибка: image_id не найден в ответе');
                 }
@@ -186,11 +185,9 @@ function Upload({onUploadComplete}) {
                     </div>
                 )}
 
-                {/* Если статус in progress, показываем загрузку */}
                 {status && status.message === 'In progress' ? (
                     <div className="loading-container">
                         <h3>Загрузка...</h3>
-                        {/* Можно добавить индикатор загрузки */}
                     </div>
                 ) : (
                     status && (

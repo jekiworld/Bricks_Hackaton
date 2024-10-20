@@ -12,37 +12,28 @@ const Decomposed = ({items, handleObjectUrl}) => {
     const backButtonRef = useRef(null);
     const [unAcceppClick, setUnAcceppClick] = useState(null);
 
-    const navigate = useNavigate();  // Add this
-
+    const navigate = useNavigate();  
     
 
     const showSlider = (type) => {
-        // Ensure refs are available before proceeding
         if (!nextButtonRef.current || !prevButtonRef.current || !carouselRef.current || !listHTMLRef.current) return;
     
-        // Disable button clicks temporarily
         nextButtonRef.current.style.pointerEvents = "none";
         prevButtonRef.current.style.pointerEvents = "none";
     
-        // Remove any existing animation classes
         carouselRef.current.classList.remove("next", "prev");
     
-        // Get the items in the list and ensure it has children
         const items = listHTMLRef.current.children;
-        if (!items || items.length === 0) return;  // Add this check to avoid manipulating an empty list
+        if (!items || items.length === 0) return;  
     
-        // Perform the sliding logic
         if (type === "next") {
-            // Append the first item to the end of the list
             listHTMLRef.current.appendChild(items[0]);
             carouselRef.current.classList.add("next");
         } else {
-            // Prepend the last item to the start of the list
             listHTMLRef.current.prepend(items[items.length - 1]);
             carouselRef.current.classList.add("prev");
         }
     
-        // Re-enable button clicks after 2 seconds
         clearTimeout(unAcceppClick);
         setUnAcceppClick(
             setTimeout(() => {
@@ -53,7 +44,6 @@ const Decomposed = ({items, handleObjectUrl}) => {
     };
 
     useEffect(() => {
-        // Ensure refs are available before attaching event listeners
         if (nextButtonRef.current && prevButtonRef.current && backButtonRef.current) {
             const handleNextClick = () => showSlider("next");
             const handlePrevClick = () => showSlider("prev");
@@ -76,7 +66,6 @@ const Decomposed = ({items, handleObjectUrl}) => {
             backButtonRef.current.addEventListener("click", handleBackClick);
     
             return () => {
-                // Ensure refs still exist before removing listeners
                 if (nextButtonRef.current) {
                     nextButtonRef.current.removeEventListener("click", handleNextClick);
                 }
@@ -95,7 +84,7 @@ const Decomposed = ({items, handleObjectUrl}) => {
 
     const handleOpen3DModal = (object) => {
         handleObjectUrl(object);
-        navigate("/3d");  // Navigate to /3d after handling object URL
+        navigate("/3d"); 
     };
 
     return (

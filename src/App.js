@@ -7,16 +7,14 @@ import Three from './page/Three/Three';
 import { useState } from 'react';
 
 function App() {
-  // Состояние для хранения передаваемых данных
   const [items, setItems] = useState([]);
   const [objectUrl, setObjectUrl] = useState(null)
-  // Функция для обновления данных, которая будет передана в Upload
   const handleDataFromUpload = (newItems) => {
-    setItems(newItems);  // Обновляем состояние с элементами
+    setItems(newItems);  
   };
 
   const handleObjectUrl = (newUrl) => {
-    setObjectUrl(newUrl);  // Обновляем состояние с элементами
+    setObjectUrl(newUrl);  
   };
   const router = createBrowserRouter([
     {
@@ -25,11 +23,11 @@ function App() {
     },
     {
       path: "/upload",
-      element: <Upload onUploadComplete={handleDataFromUpload} />  // Передаем функцию для обновления
+      element: <Upload onUploadComplete={handleDataFromUpload} />  
     },
     {
       path: "/decomposed",
-      element: <Decomposed items={items} handleObjectUrl={handleObjectUrl}/>  // Передаем данные в Decomposed
+      element: <Decomposed items={items} handleObjectUrl={handleObjectUrl}/>  
     },
     {
       path: "/3d",
